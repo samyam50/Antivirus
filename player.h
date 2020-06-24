@@ -12,7 +12,7 @@ public:
 	~Player();
 
 	virtual void simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene) override;
-	virtual void render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config) override;
+	virtual void render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene) override;
 
 	void set_speed(float speed);
 	float speed();
@@ -33,4 +33,7 @@ private:
 
 	float _speed;
 	std::stack<State> _state;
+
+	int _current_run_timer_ms;
+	int _next_run_time_ms;
 };

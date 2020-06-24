@@ -20,7 +20,7 @@ public:
 
 	virtual void simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene* scene) = 0;
 	virtual void simulate_physics(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scene);
-	virtual void render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config);
+	virtual void render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene);
 
 	Vector_2D translation();
 	Circle_2D collider();
@@ -28,6 +28,7 @@ public:
 	int width();
 
 	void set_translation(Vector_2D translation);
+	void set_velocity(Vector_2D velocity);
 
 protected:
 	std::string _id;
@@ -39,6 +40,8 @@ protected:
 
 	int _width;
 	int _height;
+
+	
 
 	SDL_RendererFlip _flip;
 };

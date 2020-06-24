@@ -68,6 +68,12 @@ void Input::get_input()
 		case SDL_KEYDOWN:
 			switch(event.key.keysym.scancode)
 			{
+			case SDL_SCANCODE_ESCAPE:
+				if (!is_button_state(Button::PAUSE, Button_State::DOWN))
+				{
+					_button_state[Button::PAUSE] = Button_State::PRESSED;
+				}
+				break;
 			case SDL_SCANCODE_W:
 				if(!is_button_state(Button::UP, Button_State::DOWN))
 				{
@@ -98,7 +104,7 @@ void Input::get_input()
 					_button_state[Button::RUNNING] = Button_State::PRESSED;
 				}
 				break;
-			case SDL_SCANCODE_RSHIFT:
+			case SDL_SCANCODE_SPACE:
 				if (!is_button_state(Button::FLYING, Button_State::DOWN))
 				{
 					_button_state[Button::FLYING] = Button_State::PRESSED;
@@ -109,6 +115,10 @@ void Input::get_input()
 		case SDL_KEYUP:
 			switch(event.key.keysym.scancode)
 			{
+			case SDL_SCANCODE_ESCAPE:
+				_button_state[Button::PAUSE] = Button_State::RELEASED;
+				break;
+
 			case SDL_SCANCODE_W:
 				_button_state[Button::UP] = Button_State::RELEASED;
 				break;
@@ -124,7 +134,7 @@ void Input::get_input()
 			case SDL_SCANCODE_LSHIFT:
 				_button_state[Button::RUNNING] = Button_State::RELEASED;
 				break;
-			case SDL_SCANCODE_RSHIFT:
+			case SDL_SCANCODE_SPACE:
 				_button_state[Button::FLYING] = Button_State::RELEASED;
 				break;
 			}

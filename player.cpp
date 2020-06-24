@@ -9,6 +9,9 @@ Player::Player(std::string id)
 {
 	_speed = 0.1f;
 
+	_current_run_timer_ms = 0;
+	_next_run_time_ms = 0;
+
 	_translation = Vector_2D(0, 0);
 
 	_collider.set_radius(_width / 5.0f);
@@ -20,20 +23,25 @@ Player::~Player()
 {
 }
 
-void Player::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config)
+void Player::render(Uint32 milliseconds_to_simulate, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene)
 {
 	Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
 	texture->update_frame(milliseconds_to_simulate);
 
-	Game_Object::render(milliseconds_to_simulate, assets, renderer, config);
+	Game_Object::render(milliseconds_to_simulate, assets, renderer, config, scene);
 }
 
-void Player::simulate_AI(Uint32, Assets* assets, Input* input, Scene*)
+void Player::simulate_AI(Uint32 milliseconds_to_simulate, Assets* assets, Input* input, Scene*)
 {
+	_next_run_time_ms -= milliseconds_to_simulate;
+	_current_run_timer_ms -= milliseconds_to_simulate;
+
 	switch(_state.top())
 	{
 		case State::Idle:
-			if(input->is_button_state(Input::Button::RUNNING, Input::Button_State::DOWN) && _velocity.magnitude() > 0.0f)
+			if(input->is_button_state(Input::Button::RUNNING, Input::Button_State::DOWN) 
+				&& _velocity.magnitude() > 0.0f
+				&& _next_run_time_ms< 0)
 			{
 				push_state(State::Running, assets);
 			}
@@ -47,13 +55,14 @@ void Player::simulate_AI(Uint32, Assets* assets, Input* input, Scene*)
 			{
 				pop_state(assets);
 			}
-			else if(input->is_button_state(Input::Button::RUNNING, Input::Button_State::PRESSED))
+			else if(input->is_button_state(Input::Button::RUNNING, Input::Button_State::PRESSED)
+				&& _next_run_time_ms<0)
 			{
 				push_state(State::Running, assets);
 			}
 			break;
 		case State::Running:
-			if(_velocity.magnitude() == 0.0f)
+			if(_current_run_timer_ms< 0)
 			{
 				pop_state(assets);
 			}
@@ -147,6 +156,11 @@ void Player::handle_enter_state(State state, Assets* assets)
 			const int running_channel = 2;
 			Sound* sound = (Sound*)assets->get_asset("Sound.Running");
 			Mix_PlayChannel(running_channel, sound->data(), -1);
+
+			Animated_Texture* texture = (Animated_Texture*)assets->get_asset(_texture_id);
+			texture->reset();
+
+			_current_run_timer_ms = 3000;
 			break;
 		}
 		case State::Flying:
@@ -177,13 +191,15 @@ void Player::handle_exit_state(State state, Assets*)
 		{
 			const int running_channel = 2;
 			Mix_HaltChannel(running_channel);
+
+			_next_run_time_ms = 5000;
 			break;
 
 		}
 		case State::Flying:
 		{
-			const int running_channel = 2;
-			Mix_HaltChannel(running_channel);
+			const int flying_channel = 3;
+			Mix_HaltChannel(flying_channel);
 			break;
 
 		}

@@ -7,6 +7,8 @@
 #include "input.h"
 #include "editor.h"
 #include "configuration.h"
+#include <stack>
+#include "pause_scene.h"
 
 // include, test that it works with a simple test.
 
@@ -15,13 +17,19 @@ int main(void)
 	Configuration* config = new Configuration();
 	Engine* engine        = new Engine("Game", config);
 	Assets* assets        = new Assets(engine->renderer());
-	Scene*  game_scene    = new Game_Scene();
+	//Scene*  game_scene    = new Game_Scene();
 	Input*  input         = new Input();
 	Editor* editor        = new Editor(L"Game");
+
+	std::stack<Scene*> scenes;
+	scenes.push(new Game_Scene());
 
 	const Uint32 milliseconds_per_seconds = 1000;
 	const Uint32 frames_per_second        = 60;
 	const Uint32 frame_time_ms            = milliseconds_per_seconds / frames_per_second;
+
+
+    
 
 	Uint32 frame_start_time_ms = 0;
 	Uint32 frame_end_time_ms   = frame_time_ms;
@@ -31,8 +39,30 @@ int main(void)
 		frame_start_time_ms            = SDL_GetTicks();
 
 		input->get_input();
-		editor->update(input, game_scene, config);
-		engine->simulate(previous_frame_duration, assets, game_scene, input, config);
+
+		if (input->is_button_state(Input::Button::PAUSE, Input::Button_State::PRESSED))
+		{
+			const bool is_paused = scenes.top()->id() == "Pause";
+
+			if (is_paused)
+			{
+				Pause_Scene* pause_scene = (Pause_Scene*)scenes.top();
+				scenes.pop();
+				delete pause_scene;
+			}
+			else
+			{
+				scenes.push(new Pause_Scene);
+			}
+		}
+
+
+		scenes.top()->update(engine->window());
+		
+		editor->update(input, scenes.top(), config);
+		engine->simulate(previous_frame_duration, assets, scenes.top(), input, config);
+
+		
 
 		const Uint32 current_time_ms   = SDL_GetTicks();
 		const Uint32 frame_duration_ms = current_time_ms - frame_start_time_ms;

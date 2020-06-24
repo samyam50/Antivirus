@@ -36,12 +36,6 @@
     <ClCompile Include="game_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dino.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="walking_dino.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,10 +63,40 @@
     <ClCompile Include="sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="portal_exit.cpp">
+    <ClCompile Include="virus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="portal_entry.cpp">
+    <ClCompile Include="virus_two.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="virus_three.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ground.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pause_scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet_Two.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet_Three.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,12 +117,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="game_object.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dino.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="walking_dino.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="scene.h">
@@ -134,10 +152,40 @@
     <ClInclude Include="sound.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="portal_entry.h">
+    <ClInclude Include="virus.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="portal_exit.h">
+    <ClInclude Include="virus_two.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="virus_three.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ground.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pause_scene.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bullet.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet_Two.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet_Three.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile2.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile3.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

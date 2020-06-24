@@ -1,13 +1,14 @@
 #include "animated_texture.h"
 #include "texture.h"
 
-Animated_Texture::Animated_Texture(std::string id, std::string path, SDL_Renderer* renderer, int frame_count, Uint32 frame_duration_milliseconds)
+Animated_Texture::Animated_Texture(std::string id, std::string path, SDL_Renderer* renderer, int frame_count, Uint32 frame_duration_milliseconds, bool should_loop)
 	: Texture(id, path, renderer)
 {
 	_frame_count                 = frame_count;
 	_current_frame               = 0;
 	_frame_duration_milliseconds = frame_duration_milliseconds;
 	_total_time_milliseconds     = frame_duration_milliseconds;
+	_should_loop = should_loop;
 }
 
 Animated_Texture::~Animated_Texture()
@@ -17,6 +18,16 @@ Animated_Texture::~Animated_Texture()
 void Animated_Texture::update_frame(Uint32 milliseconds_to_simulate)
 {
 	_total_time_milliseconds += milliseconds_to_simulate;
+
+	if (!_should_loop && (_total_time_milliseconds > (_frame_duration_milliseconds * _frame_count)))
+	{
+		_current_frame = _frame_count - 1;
+	}
+	else 
+	{
+		_current_frame = (_total_time_milliseconds / _frame_duration_milliseconds) % _frame_count;
+	}
+
 	_current_frame           = (_total_time_milliseconds / _frame_duration_milliseconds) % _frame_count;
 }
 
@@ -35,4 +46,9 @@ void Animated_Texture::render(SDL_Renderer* renderer, SDL_Rect*, SDL_Rect* desti
 	frame_clip.h = texture_h;
 
 	Texture::render(renderer, &frame_clip, destination, flip);
+}
+
+void Animated_Texture::reset()
+{
+	_total_time_milliseconds = 0;
 }

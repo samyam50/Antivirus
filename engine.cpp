@@ -12,6 +12,7 @@
 #include "texture.h"
 #include "animated_texture.h"
 #include "game_object.h"
+#include "scene.h"
 
 
 
@@ -126,12 +127,10 @@ void Engine::render(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scen
 		exit(1);
 	}
 
-	const Uint8 red   = 0;
-	const Uint8 green = 0;
-	const Uint8 blue  = 0;
-	const Uint8 alpha = 0;
+	
+	const SDL_Color background = scene->background_color();
 	const int render_color_success = 0;
-	const int render_color_result  = SDL_SetRenderDrawColor(_renderer, red, green, blue, alpha);
+	const int render_color_result  = SDL_SetRenderDrawColor(_renderer, background.r, background.g, background.b, 255);
 	if(render_color_result != render_color_success)
 	{
 		std::cout << "Failed to set render color" << std::endl;
@@ -145,6 +144,15 @@ void Engine::render(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scen
 	{
 		bool operator()(Game_Object* a, Game_Object* b)
 		{
+			if (a->id().find("Tile") != -1 && b->id().find("Tile") == -1)
+			{
+				return true;
+			}
+			else if (a->id().find("Tile") == -1 && b->id().find("Tile") != -1)
+			{
+				return false;
+			}
+
 			return a->translation().y() < b->translation().y();
 		}
 	} sort_by_y_order;
@@ -152,7 +160,7 @@ void Engine::render(Uint32 milliseconds_to_simulate, Assets* assets, Scene* scen
 
 	for(Game_Object* game_object : sorted_game_objects)
 	{
-		game_object->render(milliseconds_to_simulate, assets, _renderer, config);
+		game_object->render(milliseconds_to_simulate, assets, _renderer, config, scene);
 	}
 
 	SDL_RenderPresent(_renderer);

@@ -40,27 +40,44 @@ void Game_Object::simulate_physics(Uint32 milliseconds_to_simulate, Assets*, Sce
 		Circle_2D collider       = Circle_2D(_collider.radius(), _collider.translation() + _translation);
 		Circle_2D other_collider = Circle_2D(game_object->_collider.radius(), game_object->_collider.translation() + game_object->_translation);
 		float intersection_depth = collider.intersection_depth(other_collider);
+		
 
 		if(intersection_depth > 0.0f)
 		{
-			Vector_2D other_collider_to_collider = collider.translation() - other_collider.translation();
-			other_collider_to_collider.normalize();
-			other_collider_to_collider.scale(intersection_depth);
-			_translation += other_collider_to_collider;
+			bool is_projectile_and_player = (id().find("Projectile") != -1 && game_object->id() == "Player") ||
+				(game_object->id().find("Projectile") != -1 && id() == "Player" );
+			
 
-			Vector_2D collider_to_other_collider = other_collider.translation() - collider.translation();
-			collider_to_other_collider.normalize();
-			collider_to_other_collider.scale(intersection_depth);
-			game_object->_translation += collider_to_other_collider;
+
+			if (is_projectile_and_player )
+			{
+				scene->remove_game_object("Player");
+			}
+			else
+			{
+
+
+				Vector_2D other_collider_to_collider = collider.translation() - other_collider.translation();
+				other_collider_to_collider.normalize();
+				other_collider_to_collider.scale(intersection_depth);
+				_translation += other_collider_to_collider;
+
+				Vector_2D collider_to_other_collider = other_collider.translation() - collider.translation();
+				collider_to_other_collider.normalize();
+				collider_to_other_collider.scale(intersection_depth);
+				game_object->_translation += collider_to_other_collider;
+			}
 		}
+
+		
 	}
 }
 
-void Game_Object::render(Uint32, Assets* assets, SDL_Renderer* renderer, Configuration* config)
+void Game_Object::render(Uint32, Assets* assets, SDL_Renderer* renderer, Configuration* config, Scene* scene)
 {
 	SDL_Rect destination;
-	destination.x = (int)_translation.x();
-	destination.y = (int)_translation.y();
+	destination.x = (int)(_translation.x() - scene->camera_translation().x());
+	destination.y = (int)(_translation.y() - scene->camera_translation().y());
 	destination.w = _width;
 	destination.h = _height;
 
@@ -130,4 +147,9 @@ Circle_2D Game_Object::collider()
 void Game_Object::set_translation(Vector_2D translation)
 {
 	_translation = translation;
+}
+
+void Game_Object::set_velocity(Vector_2D velocity)
+{
+	_velocity = velocity;
 }
